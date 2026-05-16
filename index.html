@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mood Florist | Good Flower, Good Mood</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,600;1,400;1,600&family=Raleway:wght@700;800&display=swap" rel="stylesheet">
+    <style>
+        /* PRD Color Palette */
+        :root {
+            --dark-green: #01260E;
+            --soft-pink: #F2A0B6;
+            --light-grey: #F5F5F7; 
+            --sage-green: #A3B18A;
+            --dusty-rose: #B76E79;
+            --white: #FFFFFF;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--light-grey);
+            color: var(--dark-green);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .serif { font-family: 'Playfair Display', serif; }
+        .font-raleway { font-family: 'Raleway', sans-serif; }
+        
+        /* Apple-style Typography */
+        .headline-massive {
+            font-size: clamp(3.5rem, 10vw, 9rem);
+            font-weight: 800;
+            letter-spacing: -0.06em;
+            line-height: 0.9;
+        }
+        .headline-large {
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 700;
+            letter-spacing: -0.04em;
+            line-height: 1;
+        }
+        .text-body-large {
+            font-size: clamp(1.2rem, 2vw, 1.5rem);
+            font-weight: 500;
+            letter-spacing: -0.015em;
+            line-height: 1.5;
+            max-width: 800px;
+        }
+
+        /* ---------------------------------------------------- */
+        /* Animasi Interaktif Judul & Harga                     */
+        /* ---------------------------------------------------- */
+        .interactive-title {
+            background-size: 200% auto;
+            color: transparent;
+            -webkit-background-clip: text;
+            background-clip: text;
+            animation: gradient-flow 6s linear infinite;
+            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), letter-spacing 0.5s ease;
+            display: inline-block;
+            cursor: default;
+        }
+        .interactive-title:hover {
+            transform: scale(1.03);
+            letter-spacing: -0.02em;
+        }
+        
+        .gradient-dark { background-image: linear-gradient(90deg, var(--dark-green) 0%, #055e27 50%, var(--dark-green) 100%); }
+        .gradient-pink { background-image: linear-gradient(90deg, var(--soft-pink) 0%, #ffffff 50%, var(--soft-pink) 100%); }
+        .gradient-rose { background-image: linear-gradient(90deg, var(--dusty-rose) 0%, #ffffff 50%, var(--dusty-rose) 100%); }
+
+        @keyframes gradient-flow {
+            to { background-position: 200% center; }
+        }
+
+        .interactive-price {
+            display: inline-block;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+        }
+        .interactive-price:hover { transform: scale(1.15) rotate(-2deg); }
+        .glow-dark:hover { text-shadow: 0 15px 35px rgba(1, 38, 14, 0.3); }
+        .glow-pink:hover { text-shadow: 0 15px 35px rgba(242, 160, 182, 0.6); }
+
+        /* ---------------------------------------------------- */
+        /* Animasi Teks Deskripsi Hero & CTA (Muncul Belakangan)*/
+        /* ---------------------------------------------------- */
+        @keyframes slideUpFade {
+            0% { opacity: 0; transform: translateY(30px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        .apple-reveal.active .desc-reveal {
+            animation: slideUpFade 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            animation-delay: 0.4s; /* Muncul setelah judul */
+        }
+        .desc-reveal { opacity: 0; }
+
+        /* Animasi Khusus Teks Deskripsi Hero (Cinematic Blur) */
+        @keyframes blurReveal {
+            0% { opacity: 0; transform: translateY(20px); filter: blur(8px); letter-spacing: 0.05em; }
+            100% { opacity: 1; transform: translateY(0); filter: blur(0); letter-spacing: normal; }
+        }
+        .hero-desc-animate {
+            opacity: 0;
+            animation: blurReveal 1.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+            animation-delay: 0.6s; /* Delay agar muncul indah setelah judul */
+        }
+
+        /* ---------------------------------------------------- */
+        /* Animasi Deskripsi ke Samping Gambar                  */
+        /* ---------------------------------------------------- */
+        .side-desc {
+            max-height: 0;
+            opacity: 0;
+            transform: translateX(-30px);
+            overflow: hidden;
+            transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .side-desc.show {
+            max-height: 300px;
+            opacity: 1;
+            transform: translateX(0);
+            margin-top: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        /* ---------------------------------------------------- */
+        /* Buttons Outline                                      */
+        /* ---------------------------------------------------- */
+        .btn-outline {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 14px 32px;
+            border-radius: 980px;
+            font-size: 17px;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            background: transparent;
+        }
+        
+        .btn-outline-pink {
+            border: 2px solid var(--soft-pink);
+            color: var(--soft-pink);
+        }
+        .btn-outline-pink:hover {
+            background-color: var(--soft-pink);
+            color: var(--dark-green);
+            transform: scale(1.03);
+            box-shadow: 0 15px 30px rgba(242, 160, 182, 0.3);
+        }
+
+        .btn-outline-dark {
+            border: 2px solid var(--dark-green);
+            color: var(--dark-green);
+        }
+        .btn-outline-dark:hover {
+            background-color: var(--dark-green);
+            color: var(--white);
+            transform: scale(1.03);
+            box-shadow: 0 15px 30px rgba(1, 38, 14, 0.2);
+        }
+
+        /* ---------------------------------------------------- */
+        /* Animasi Kelopak Bunga (Petals) & Efek Emosional CTA  */
+        /* ---------------------------------------------------- */
+        .petal-container {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            overflow: hidden; pointer-events: none; z-index: 1;
+        }
+        .petal {
+            position: absolute;
+            top: -10%;
+            background-color: var(--soft-pink);
+            border-radius: 0 50% 50% 50%; /* Bentuk kelopak presisi */
+            opacity: 0;
+            animation: petal-fall linear infinite;
+            filter: drop-shadow(0 0 5px rgba(242, 160, 182, 0.5));
+        }
+        @keyframes petal-fall {
+            0% { transform: translateY(0) rotate(0deg) translateX(0); opacity: 0; }
+            10% { opacity: 0.9; }
+            80% { opacity: 0.9; }
+            100% { transform: translateY(110vh) rotate(720deg) translateX(100px); opacity: 0; }
+        }
+
+        /* Efek Denyut Emosional untuk CTA */
+        .heartbeat-text {
+            animation: heartbeat 3s ease-in-out infinite;
+        }
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); text-shadow: 0 0 0 rgba(242, 160, 182, 0); }
+            50% { transform: scale(1.03); text-shadow: 0 0 25px rgba(242, 160, 182, 0.7); }
+        }
+        
+        /* ---------------------------------------------------- */
+        /* Modal Add-on Scroll & Styles                         */
+        /* ---------------------------------------------------- */
+        .addon-scroll::-webkit-scrollbar { height: 4px; }
+        .addon-scroll::-webkit-scrollbar-track { background: #F5F5F7; border-radius: 4px; }
+        .addon-scroll::-webkit-scrollbar-thumb { background: var(--soft-pink); border-radius: 4px; }
+        .addon-card.selected {
+            border-color: var(--soft-pink);
+            background-color: rgba(242, 160, 182, 0.1);
+        }
+        /* ---------------------------------------------------- */
+
+        /* Cinematic Scroll Animations */
+        .apple-reveal {
+            opacity: 0;
+            transform: translateY(60px) scale(0.95);
+            transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .apple-reveal.active {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        /* Navigasi */
+        .nav-glass {
+            background: rgba(245, 245, 247, 0.7);
+            backdrop-filter: saturate(180%) blur(20px);
+            -webkit-backdrop-filter: saturate(180%) blur(20px);
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+        .nav-glass.dark-mode {
+            background: rgba(1, 38, 14, 0.7);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        /* Gambar */
+        .img-hero-mask {
+            border-radius: 40px;
+            overflow: hidden;
+            position: relative;
+        }
+        .img-hero-mask img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .full-viewport { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; }
+    </style>
+</head>
+<body class="antialiased selection:bg-[#F2A0B6] selection:text-[#01260E]">
+
+    <!-- Navigasi -->
+    <nav id="navbar" class="fixed top-0 w-full z-[100] nav-glass">
+        <div class="max-w-[1400px] mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <span class="font-bold text-xl tracking-tighter" id="nav-brand">Mood Florist</span>
+            </div>
+            <div class="hidden md:flex items-center gap-8 text-xs font-semibold tracking-wide" id="nav-links">
+                <a href="#hero" class="hover:opacity-60 transition">Beranda</a>
+                <a href="#products" class="hover:opacity-60 transition">Koleksi</a>
+                <a href="#cta" class="hover:opacity-60 transition">Kontak</a>
+            </div>
+            <a href="#products" class="btn-outline btn-outline-dark text-xs px-5 py-2" id="nav-btn">Katalog</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section (Warna Terang) -->
+    <section id="hero" class="full-viewport pt-24 pb-12 px-6 text-center bg-[#F5F5F7] relative">
+        <!-- Kontainer Kelopak Bunga -->
+        <div class="petal-container" id="petals-hero"></div>
+        
+        <div class="max-w-[1400px] mx-auto w-full apple-reveal relative z-10">
+            <h1 class="headline-massive mb-2 interactive-title gradient-dark">Good Flower.</h1>
+            <br>
+            <h1 class="headline-massive mb-8 serif italic interactive-title gradient-pink">Good Mood.</h1>
+            
+            <!-- Animasi Deskripsi Khusus & Ukuran Proporsional -->
+            <p class="text-lg md:text-2xl text-[#01260E]/80 mb-12 max-w-3xl mx-auto font-light leading-relaxed hero-desc-animate">
+                Jembatan emosional Anda. Kami merangkai pesan cinta, dukungan, dan kebahagiaan melalui kelopak bunga premium yang lahir dari hati di Bali.
+            </p>
+            
+            <div class="img-hero-mask mt-8 h-[60vh] shadow-2xl shadow-[#01260E]/10 cursor-pointer group">
+                <img src="images/hero section Large.png" alt="Buket Mood Florist" class="transition duration-1000 group-hover:scale-105">
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION BARU: Cinematic Video Gallery (Single View Auto-Slide) -->
+    <section id="showcase" class="py-24 bg-[#FFFFFF] overflow-hidden">
+        <style>
+            /* Menyembunyikan scrollbar asli tapi tetap bisa digeser (Clean Apple Style) */
+            .hide-scroll::-webkit-scrollbar { display: none; }
+            .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
+        </style>
+        
+        <div class="max-w-[1200px] mx-auto apple-reveal px-6">
+            
+           <!-- Kontainer Geser Horizontal (Satu Layar Penuh) -->
+            <div id="video-slider" class="flex overflow-x-auto snap-x snap-mandatory hide-scroll rounded-[40px] shadow-2xl relative bg-black">
+                
+                <!-- Slide 1: Video -->
+                <div class="snap-center shrink-0 w-full aspect-[16/9] relative">
+                    <video class="showcase-video w-full h-full object-cover" autoplay muted playsinline>
+                        <source src="videos/video-estetik.mp4" type="video/mp4">
+                    </video>
+                </div>
+
+                <!-- Slide 2: Image -->
+                <div class="snap-center shrink-0 w-full aspect-[16/9] relative">
+                    <!-- Gunakan tag img untuk gambar -->
+                    <img src="images/gambar 1 Large.jpeg" class="w-full h-full object-cover" alt="Galeri 1">
+                </div>
+
+                <!-- Slide 3: Image -->
+                <div class="snap-center shrink-0 w-full aspect-[16/9] relative">
+                    <img src="images/gambar 2 Large.jpeg" class="w-full h-full object-cover" alt="Galeri 2">
+                </div>
+
+                <!-- Slide 4: Image -->
+                <div class="snap-center shrink-0 w-full aspect-[16/9] relative">
+                    <img src="images/gambar 3Large .jpeg" class="w-full h-full object-cover" alt="Galeri 3">
+                </div>
+
+            </div>
+
+            <!-- Indikator Posisi (Dots) - Ditambah 1 agar sesuai 4 slide -->
+            <div class="flex justify-center gap-3 mt-8">
+                <div class="vid-dot w-2.5 h-2.5 rounded-full bg-[#01260E] opacity-100 transition-opacity duration-300"></div>
+                <div class="vid-dot w-2.5 h-2.5 rounded-full bg-[#01260E] opacity-30 transition-opacity duration-300"></div>
+                <div class="vid-dot w-2.5 h-2.5 rounded-full bg-[#01260E] opacity-30 transition-opacity duration-300"></div>
+                <div class="vid-dot w-2.5 h-2.5 rounded-full bg-[#01260E] opacity-30 transition-opacity duration-300"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- KUMPULAN PRODUK (Warna Gelap Semua) -->
+    <div id="products" class="bg-[#01260E]">
+        
+        <div class="max-w-[1200px] mx-auto pt-32 px-6 text-center apple-reveal">
+            <span class="text-[#F2A0B6] font-bold tracking-[0.3em] uppercase text-xs mb-3 block">The Signature Collection</span>
+            <h3 class="headline-large font-raleway interactive-title gradient-pink mb-2">Tiga Mahakarya Emosional</h3>
+            <p class="text-body-large text-[#E6E6E6]/80 mx-auto max-w-2xl font-light">
+                Setiap kelopak dirangkai untuk mewakili perasaan Anda.
+            </p>
+            
+            <!-- Animasi "Yuk Pilih Sekarang" dengan Panah Scroll -->
+            <div class="mt-8 flex flex-col items-center justify-center gap-3">
+                <span class="text-[#F2A0B6] font-bold uppercase tracking-widest text-sm block">Yuk Pilih Sekarang!</span>
+                <a href="#mini-bloom" class="w-12 h-12 flex items-center justify-center rounded-full bg-[#F2A0B6]/10 text-[#F2A0B6] hover:bg-[#F2A0B6] hover:text-[#01260E] transition-all duration-500 animate-[bounce_2s_infinite] shadow-lg">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+                </a>
+            </div>
+        </div>
+
+        <!-- Product 1: Mini Bloom -->
+        <section id="mini-bloom" class="full-viewport py-24 px-6 bg-[#01260E] text-white product-section">
+            <div class="max-w-[1200px] mx-auto grid lg:grid-cols-2 gap-10 items-center apple-reveal">
+                
+                <!-- Kiri: Gambar Interaktif -->
+                <div class="cursor-pointer group relative" onclick="toggleSideDescription('desc-1')">
+                    <div class="img-hero-mask h-[600px] shadow-2xl shadow-black/50">
+                        <img src="images/mini bloom Large.jpeg" alt="Mini Bloom" class="transition duration-700 group-hover:scale-105">
+                        
+                        <!-- Overlay Hint: Muncul saat di hover -->
+                        <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition duration-500 flex items-center justify-center backdrop-blur-sm">
+                            <span class="text-[#F2A0B6] font-semibold tracking-[0.2em] uppercase border border-[#F2A0B6] px-8 py-3 rounded-full text-sm">Lihat Detail</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Kanan: Judul, Harga, Deskripsi (Tersembunyi), Tombol -->
+                <div class="flex flex-col justify-center text-left">
+                    <h3 class="headline-large font-raleway interactive-title gradient-pink mb-1">Mini Bloom</h3>
+                    <div class="mb-1">
+                        <span class="text-5xl md:text-7xl font-bold tracking-tighter text-[#F2A0B6] interactive-price glow-pink">Rp 15.000</span>
+                    </div>
+
+                    <!-- Deskripsi Slide Kesamping -->
+                    <div id="desc-1" class="side-desc">
+                        <p class="text-body-large text-[#E6E6E6]/80 border-l-2 border-[#F2A0B6] pl-5 py-1">
+                            Kecil, menggemaskan, dan relevan. Menjaga esensi karya seni estetik dalam bentuk yang paling bersahabat untuk kantong pelajar tanpa mengorbankan kualitas.
+                        </p>
+                    </div>
+
+                    <button onclick="orderProduct('Mini Bloom', 15000, 'images/mini bloom Large.jpeg')" class="btn-outline btn-outline-pink mt-4 w-fit">Pesan Sekarang</button>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Product 2: Mood Bag (Sedikit lebih gelap untuk transisi) -->
+        <section class="full-viewport py-24 px-6 bg-[#011A0A] text-white product-section">
+            <div class="max-w-[1200px] mx-auto grid lg:grid-cols-2 gap-10 items-center apple-reveal">
+                
+                <!-- Kiri: Info Produk -->
+                <div class="flex flex-col justify-center text-left lg:order-1 order-2">
+                    <h3 class="headline-large font-raleway interactive-title gradient-pink mb-1">Mood Bag</h3>
+                    <div class="mb-1">
+                        <span class="text-5xl md:text-7xl font-bold tracking-tighter text-[#F2A0B6] interactive-price glow-pink">Rp 20.000</span>
+                    </div>
+
+                    <!-- Deskripsi Slide Kesamping -->
+                    <div id="desc-2" class="side-desc">
+                        <p class="text-body-large text-[#E6E6E6]/80 border-l-2 border-[#F2A0B6] pl-5 py-1">
+                            Rangkaian paling rimbun dan penuh warna. Desain eksklusif yang siap membangkitkan energi positif dan mencerahkan hari siapa saja secara instan.
+                        </p>
+                    </div>
+
+                    <button onclick="orderProduct('Mood Bag', 20000, 'images/bag mood Large.jpeg')" class="btn-outline btn-outline-pink mt-4 w-fit">Pesan Sekarang</button>
+                </div>
+
+                <!-- Kanan: Gambar Interaktif -->
+                <div class="cursor-pointer group relative lg:order-2 order-1" onclick="toggleSideDescription('desc-2')">
+                    <div class="img-hero-mask h-[600px] shadow-2xl shadow-black/50">
+                        <img src="images/bag mood Large.jpeg" alt="Mood Bag" class="transition duration-700 group-hover:scale-105 opacity-90 group-hover:opacity-100">
+                        
+                        <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition duration-500 flex items-center justify-center backdrop-blur-sm">
+                            <span class="text-[#F2A0B6] font-semibold tracking-[0.2em] uppercase border border-[#F2A0B6] px-8 py-3 rounded-full text-sm">Lihat Detail</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Product 3: Secret Box -->
+        <section class="full-viewport py-24 px-6 bg-[#023013] text-white product-section">
+            <div class="max-w-[1200px] mx-auto grid lg:grid-cols-2 gap-10 items-center apple-reveal">
+                
+                <!-- Kiri: Gambar Interaktif -->
+                <div class="cursor-pointer group relative" onclick="toggleSideDescription('desc-3')">
+                    <div class="img-hero-mask h-[600px] shadow-2xl shadow-black/50">
+                        <img src="images/scret box Large.jpeg" alt="Secret Box" class="transition duration-700 group-hover:scale-105">
+                        
+                        <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition duration-500 flex items-center justify-center backdrop-blur-sm">
+                            <span class="text-[#F2A0B6] font-semibold tracking-[0.2em] uppercase border border-[#F2A0B6] px-8 py-3 rounded-full text-sm">Lihat Detail</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Kanan: Judul, Harga, Deskripsi -->
+                <div class="flex flex-col justify-center text-left">
+                    <h3 class="headline-large font-raleway interactive-title gradient-rose mb-1">Secret Box</h3>
+                    <div class="mb-1">
+                        <span class="text-5xl md:text-7xl font-bold tracking-tighter text-[#F2A0B6] interactive-price glow-pink">Rp 25.000</span>
+                    </div>
+
+                    <div id="desc-3" class="side-desc">
+                        <p class="text-body-large text-[#E6E6E6]/80 border-l-2 border-[#B76E79] pl-5 py-1">
+                            Misteri elegan dalam sebuah kotak eksklusif. Menghadirkan kejutan visual mewah yang melambangkan kesetiaan abadi dan kemurnian.
+                        </p>
+                    </div>
+
+                    <button onclick="orderProduct('Secret Box', 25000, 'images/scret box Large.jpeg')" class="btn-outline btn-outline-pink mt-4 w-fit">Pesan Sekarang</button>
+                </div>
+
+            </div>
+        </section>
+    </div>
+
+    <!-- Massive CTA Section (Kembali ke Warna Terang) -->
+    <section id="cta" class="full-viewport py-32 bg-[#F5F5F7] text-[#01260E] flex flex-col justify-center items-center text-center px-6 relative overflow-hidden">
+        
+        <!-- Kontainer Kelopak Bunga Lebat -->
+        <div class="petal-container" id="petals-cta"></div>
+
+        <div class="max-w-[1000px] mx-auto apple-reveal relative z-10">
+            <h3 class="headline-massive mb-2 interactive-title gradient-dark">Sampaikan</h3>
+            <br>
+            <!-- Animasi Heartbeat pada Teks Akhir -->
+            <h3 class="headline-massive mb-10 serif italic interactive-title gradient-rose heartbeat-text">Perasaanmu.</h3>
+            
+            <!-- Animasi Deskripsi Muncul Belakangan -->
+            <p class="text-body-large text-[#01260E]/70 mb-16 mx-auto desc-reveal">
+                Konsultasikan pesanan khusus Anda atau pilih dari koleksi premium kami. Artisan Mood Florist di Bali siap membantu mewujudkan pesan cinta Anda hari ini.
+            </p>
+            
+            <div class="flex flex-col sm:flex-row gap-6 justify-center items-center desc-reveal" style="animation-delay: 0.6s;">
+                <a href="https://wa.me/6285940781720" class="btn-outline btn-outline-dark">
+                    Hubungi via WhatsApp
+                </a>
+                <a href="#products" class="btn-outline btn-outline-pink">
+                    Lihat Koleksi Kembali
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer Terang Premium -->
+    <footer class="bg-[#FFFFFF] pt-24 pb-10 border-t border-gray-200">
+        <div class="max-w-[1200px] mx-auto px-6">
+            <!-- Top Section: Brand & Links -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 md:gap-8 mb-20">
+                
+                <!-- Brand Col -->
+                <div class="md:col-span-2 pr-0 md:pr-12">
+                    <h4 class="font-bold text-3xl tracking-tighter text-[#01260E] mb-4">Mood Florist.</h4>
+                    <p class="text-[#01260E]/60 font-medium max-w-sm leading-relaxed">
+                        Jembatan emosional Anda. Kami merangkai pesan cinta, dukungan, dan kebahagiaan melalui kelopak bunga premium yang lahir dari hati di Bali.
+                    </p>
+                </div>
+                
+                <!-- Links Col 1 -->
+                <div>
+                    <h5 class="font-bold text-[#01260E] uppercase tracking-widest text-xs mb-6">Eksplorasi</h5>
+                    <ul class="space-y-4 text-sm font-semibold text-[#01260E]/70">
+                        <li><a href="#hero" class="hover:text-[#F2A0B6] transition-colors">Beranda</a></li>
+                        <li><a href="#products" class="hover:text-[#F2A0B6] transition-colors">Koleksi Produk</a></li>
+                        <li><a href="#cta" class="hover:text-[#F2A0B6] transition-colors">Hubungi Kami</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Links Col 2 -->
+                <div>
+                    <h5 class="font-bold text-[#01260E] uppercase tracking-widest text-xs mb-6">Sosial & Kontak</h5>
+                    <ul class="space-y-4 text-sm font-semibold text-[#01260E]/70">
+                        <li><a href="#" class="hover:text-[#F2A0B6] transition-colors">Instagram</a></li>
+                        <li><a href="https://wa.me/6285940781720" class="hover:text-[#F2A0B6] transition-colors">WhatsApp Admin</a></li>
+                        <li class="pt-3 text-[#01260E]/40 font-medium">Denpasar, Bali - Indonesia</li>
+                    </ul>
+                </div>
+                
+            </div>
+            
+            <!-- Bottom Section: Copyright & Legal -->
+            <div class="border-t border-[#01260E]/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs font-semibold text-[#01260E]/50">
+                <p>&copy; 2026 Mood Florist. Hak Cipta Dilindungi.</p>
+                <p>Crafted with passion in Bali.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Clean Apple-Style Modal -->
+    <div id="orderModal" class="fixed inset-0 z-[200] hidden items-center justify-center p-4">
+        <div class="absolute inset-0 bg-black/40 backdrop-blur-md" onclick="closeModal()"></div>
+        
+        <div class="bg-white rounded-[40px] p-8 md:p-14 max-w-xl w-full shadow-2xl relative z-10 transform scale-95 opacity-0 transition-all duration-300 overflow-y-auto max-h-[95vh]" id="modalContent">
+            
+            <!-- Kontainer Kelopak Bunga Modal -->
+            <div class="petal-container" id="petals-modal"></div>
+
+            <button onclick="closeModal()" class="absolute top-6 right-6 w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center text-gray-500 hover:bg-[#F2A0B6] hover:text-white transition relative z-20">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+
+            <div class="w-full h-40 md:h-48 mb-6 rounded-3xl overflow-hidden shadow-lg relative z-20 group">
+                <img id="modalPreviewImg" src="" alt="Preview Produk" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-150 cursor-zoom-in origin-center">
+            </div>
+
+            <div class="text-center mb-6 relative z-20">
+                <h3 id="modalTitle" class="text-4xl font-bold tracking-tighter text-[#01260E] mb-2 font-raleway">Pesanan</h3>
+                <p id="modalPrice" class="text-xl font-semibold text-[#B76E79]"></p>
+            </div>
+            
+            <!-- Add-on Section (Produk Tambahan Lainnya) -->
+            <div class="mb-6 relative z-20">
+                <h4 class="text-xs font-bold text-[#01260E] uppercase tracking-widest mb-3 flex items-center gap-2">
+                    Tambahan Produk Lainnya
+                    <span class="bg-[#F2A0B6] text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold">+</span>
+                </h4>
+                <div class="flex overflow-x-auto gap-4 pb-2 addon-scroll snap-x">
+                    
+                    <!-- Add-on 1: Mini Bloom -->
+                    <div id="addon-1" data-name="Mini Bloom" class="addon-card min-w-[130px] border-2 border-transparent bg-[#F5F5F7] rounded-2xl p-2 cursor-pointer transition-all snap-start" onclick="toggleAddon('addon-1', 'Mini Bloom', 15000)">
+                        <div class="relative h-20 w-full rounded-xl overflow-hidden mb-2">
+                            <img src="images/mini bloom Large.jpeg" class="w-full h-full object-cover">
+                        </div>
+                        <p class="font-bold text-[#01260E] text-[11px] leading-tight mb-1">Mini Bloom</p>
+                        <p class="text-[#B76E79] font-bold text-[11px]">+ Rp 15k</p>
+                    </div>
+
+                    <!-- Add-on 2: Mood Bag -->
+                    <div id="addon-2" data-name="Mood Bag" class="addon-card min-w-[130px] border-2 border-transparent bg-[#F5F5F7] rounded-2xl p-2 cursor-pointer transition-all snap-start" onclick="toggleAddon('addon-2', 'Mood Bag', 20000)">
+                        <div class="relative h-20 w-full rounded-xl overflow-hidden mb-2">
+                            <img src="images/bag mood Large.jpeg" class="w-full h-full object-cover">
+                        </div>
+                        <p class="font-bold text-[#01260E] text-[11px] leading-tight mb-1">Mood Bag</p>
+                        <p class="text-[#B76E79] font-bold text-[11px]">+ Rp 20k</p>
+                    </div>
+
+                    <!-- Add-on 3: Secret Box -->
+                    <div id="addon-3" data-name="Secret Box" class="addon-card min-w-[130px] border-2 border-transparent bg-[#F5F5F7] rounded-2xl p-2 cursor-pointer transition-all snap-start" onclick="toggleAddon('addon-3', 'Secret Box', 25000)">
+                        <div class="relative h-20 w-full rounded-xl overflow-hidden mb-2">
+                            <img src="images/scret box Large.jpeg" class="w-full h-full object-cover">
+                        </div>
+                        <p class="font-bold text-[#01260E] text-[11px] leading-tight mb-1">Secret Box</p>
+                        <p class="text-[#B76E79] font-bold text-[11px]">+ Rp 25k</p>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Jumlah Produk Section -->
+            <div class="mb-6 relative z-20 bg-[#F5F5F7] rounded-2xl p-4 flex justify-between items-center">
+                <label class="text-xs font-bold text-[#01260E] uppercase tracking-widest">Jumlah Produk Utama</label>
+                <div class="flex items-center gap-3">
+                    <button onclick="changeQty(-1)" class="w-8 h-8 flex justify-center items-center rounded-full bg-white text-[#01260E] hover:bg-[#F2A0B6] hover:text-white font-bold transition shadow-sm">-</button>
+                    <span id="qtyDisplay" class="font-bold text-[#01260E] text-lg w-6 text-center">1</span>
+                    <button onclick="changeQty(1)" class="w-8 h-8 flex justify-center items-center rounded-full bg-white text-[#01260E] hover:bg-[#F2A0B6] hover:text-white font-bold transition shadow-sm">+</button>
+                </div>
+            </div>
+
+            <div class="space-y-4 mb-6 relative z-20">
+                <div>
+                    <input type="text" id="custName" placeholder="Nama Lengkap Anda" class="w-full bg-[#F5F5F7] border-none rounded-2xl p-4 text-[#01260E] text-base font-medium outline-none focus:ring-2 focus:ring-[#F2A0B6] transition">
+                    <!-- Pesan Error Inline sebagai pengganti alert -->
+                    <p id="errorName" class="text-[#B76E79] text-xs mt-2 ml-2 font-medium hidden">Nama lengkap diperlukan untuk pesanan.</p>
+                </div>
+                <div>
+                    <textarea id="custNote" placeholder="Pesan untuk kartu ucapan (Opsional)" class="w-full bg-[#F5F5F7] border-none rounded-2xl p-4 text-[#01260E] text-base font-medium h-24 outline-none focus:ring-2 focus:ring-[#F2A0B6] transition resize-none"></textarea>
+                </div>
+            </div>
+            
+            <button onclick="confirmOrder()" class="btn-outline btn-outline-pink w-full transition-all relative z-20 py-4">
+                Kirim via WhatsApp
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Cinematic Scroll Reveal 
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.15
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.apple-reveal').forEach(el => observer.observe(el));
+
+        // Dynamic Navbar Color Handling (Ubah warna nav bila melewati area gelap)
+        const navbar = document.getElementById('navbar');
+        const navBrand = document.getElementById('nav-brand');
+        const navLinks = document.getElementById('nav-links');
+        const navBtn = document.getElementById('nav-btn');
+        const darkSections = document.querySelectorAll('.product-section');
+
+        window.addEventListener('scroll', () => {
+            let isDark = false;
+            const navHeight = navbar.offsetHeight;
+
+            darkSections.forEach(section => {
+                const rect = section.getBoundingClientRect();
+                if (rect.top <= navHeight && rect.bottom >= navHeight) {
+                    isDark = true;
+                }
+            });
+
+            if (isDark) {
+                navbar.classList.add('dark-mode');
+                navBrand.style.color = '#FFFFFF';
+                navLinks.style.color = '#FFFFFF';
+                navBtn.classList.remove('btn-outline-dark');
+                navBtn.classList.add('btn-outline-pink');
+            } else {
+                navbar.classList.remove('dark-mode');
+                navBrand.style.color = '#01260E';
+                navLinks.style.color = '#01260E';
+                navBtn.classList.remove('btn-outline-pink');
+                navBtn.classList.add('btn-outline-dark');
+            }
+        });
+
+        // Click Price to Order
+        document.querySelectorAll('.interactive-price').forEach(priceEl => {
+            priceEl.addEventListener('click', (e) => {
+                const nearestBtn = e.target.parentElement.parentElement.querySelector('button');
+                if(nearestBtn) nearestBtn.click();
+            });
+        });
+
+        // Toggle Product Description Logic (Menyamping)
+        function toggleSideDescription(id) {
+            const desc = document.getElementById(id);
+            if (desc.classList.contains('show')) {
+                desc.classList.remove('show');
+            } else {
+                desc.classList.add('show');
+            }
+        }
+
+        // Modal Logic
+        let currentProduct = '';
+        let currentPrice = 0;
+        let currentQuantity = 1;
+        let selectedAddons = {}; // Objek untuk menyimpan addon terpilih
+        const modal = document.getElementById('orderModal');
+        const modalContent = document.getElementById('modalContent');
+
+        function changeQty(delta) {
+            currentQuantity += delta;
+            if (currentQuantity < 1) currentQuantity = 1;
+            document.getElementById('qtyDisplay').innerText = currentQuantity;
+            updateTotalPrice();
+        }
+
+        function orderProduct(name, price, imgSrc) {
+            currentProduct = name;
+            currentPrice = price;
+            currentQuantity = 1; // Reset quantity ke 1
+            document.getElementById('qtyDisplay').innerText = currentQuantity;
+            
+            // Reset Addons saat buka produk baru
+            selectedAddons = {};
+            document.querySelectorAll('.addon-card').forEach(card => {
+                card.classList.remove('selected');
+                
+                // Logika: Sembunyikan addon jika namanya sama dengan produk utama
+                if (card.dataset.name === name) {
+                    card.style.display = 'none';
+                } else {
+                    card.style.display = 'block';
+                }
+            });
+            updateTotalPrice();
+            
+            document.getElementById('modalTitle').innerText = name;
+            document.getElementById('modalPreviewImg').src = imgSrc;
+            document.getElementById('errorName').classList.add('hidden');
+            
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            
+            setTimeout(() => {
+                modalContent.classList.remove('scale-95', 'opacity-0');
+                modalContent.classList.add('scale-100', 'opacity-100');
+            }, 10);
+            
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Fungsi toggle seleksi produk tambahan
+        function toggleAddon(id, name, price) {
+            const card = document.getElementById(id);
+            if (selectedAddons[id]) {
+                delete selectedAddons[id];
+                card.classList.remove('selected');
+            } else {
+                selectedAddons[id] = { name, price };
+                card.classList.add('selected');
+            }
+            updateTotalPrice();
+        }
+
+        // Fungsi menghitung total harga termasuk addon
+        function updateTotalPrice() {
+            let total = (currentPrice * currentQuantity);
+            for (let id in selectedAddons) {
+                total += selectedAddons[id].price;
+            }
+            document.getElementById('modalPrice').innerText = 'Rp ' + total.toLocaleString('id-ID');
+        }
+
+        function closeModal() {
+            modalContent.classList.remove('scale-100', 'opacity-100');
+            modalContent.classList.add('scale-95', 'opacity-0');
+            
+            setTimeout(() => {
+                modal.classList.remove('flex');
+                modal.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+                document.getElementById('custName').value = '';
+                document.getElementById('custNote').value = '';
+            }, 300);
+        }
+
+        function confirmOrder() {
+            const name = document.getElementById('custName').value;
+            const note = document.getElementById('custNote').value;
+            
+            if (!name.trim()) {
+                document.getElementById('errorName').classList.remove('hidden');
+                return;
+            } else {
+                document.getElementById('errorName').classList.add('hidden');
+            }
+
+            // Kumpulkan data produk tambahan
+            let addonText = '';
+            let totalAddonPrice = 0;
+            if (Object.keys(selectedAddons).length > 0) {
+                addonText = '\n\n*Produk Tambahan Lainnya:*';
+                for (let id in selectedAddons) {
+                    addonText += `\n- ${selectedAddons[id].name} (+ Rp ${selectedAddons[id].price.toLocaleString('id-ID')})`;
+                    totalAddonPrice += selectedAddons[id].price;
+                }
+            }
+            
+            const grandTotal = (currentPrice * currentQuantity) + totalAddonPrice;
+
+            const waNumber = '628123456789';
+            const script = `Halo Mood Florist! 🌸 Saya ingin memesan produk berikut:
+
+*Produk Utama:* ${currentProduct}
+*Harga Dasar:* Rp ${currentPrice.toLocaleString('id-ID')}
+*Jumlah:* ${currentQuantity} pcs${addonText}
+
+*Total Keseluruhan:* Rp ${grandTotal.toLocaleString('id-ID')}
+*Nama Pemesan:* ${name}
+*Pesan di Kartu:* ${note ? note : '-'}
+
+Mohon informasi ketersediaan. Terima kasih!`;
+
+            window.open(`https://wa.me/${waNumber}?text=${encodeURIComponent(script)}`, '_blank');
+            closeModal();
+        }
+
+        // Generator Kelopak Bunga (Petals Spawner)
+        function spawnPetals(containerId, count) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            
+            for (let i = 0; i < count; i++) {
+                const petal = document.createElement('div');
+                petal.classList.add('petal');
+                
+                // Variasi Acak: Posisi, Ukuran, Delay, Durasi, Warna
+                const leftPos = Math.random() * 100; // 0-100% width
+                const size = Math.random() * 8 + 10; // 10px to 18px
+                const delay = Math.random() * 8; // delay up to 8s
+                const duration = Math.random() * 4 + 4; // 4s to 8s fall speed
+                
+                // Bergantian antara Soft Pink dan Dusty Rose
+                petal.style.backgroundColor = Math.random() > 0.5 ? 'var(--soft-pink)' : 'var(--dusty-rose)';
+                
+                petal.style.left = `${leftPos}%`;
+                petal.style.width = `${size}px`;
+                petal.style.height = `${size}px`;
+                petal.style.animationDelay = `${delay}s`;
+                petal.style.animationDuration = `${duration}s`;
+                
+                container.appendChild(petal);
+            }
+        }
+
+        // Jalankan animasi kelopak saat halaman dimuat
+        window.addEventListener('DOMContentLoaded', () => {
+            spawnPetals('petals-hero', 25); // Hero secukupnya
+            spawnPetals('petals-cta', 40);  // CTA lebih lebat untuk impact
+            spawnPetals('petals-modal', 20); // Modal ucapan selamat
+        });
+
+        // Auto-Slide & Video Control Logic
+        const videoSlider = document.getElementById('video-slider');
+        const showcaseVideos = document.querySelectorAll('.showcase-video');
+        const dots = document.querySelectorAll('.vid-dot');
+
+        if (videoSlider && showcaseVideos.length > 0) {
+            let currentVidIndex = 0; // Menyimpan status index video yang sedang aktif
+
+            showcaseVideos.forEach((video, index) => {
+                // Saat video selesai, otomatis geser ke selanjutnya
+                video.addEventListener('ended', () => {
+                    let nextIndex = index + 1;
+                    if (nextIndex >= showcaseVideos.length) {
+                        nextIndex = 0; // Kembali ke video pertama jika sudah di ujung
+                    }
+                    
+                    const nextSlide = showcaseVideos[nextIndex].parentElement;
+                    videoSlider.scrollTo({
+                        left: nextSlide.offsetLeft,
+                        behavior: 'smooth'
+                    });
+                    
+                    // Catatan: Animasi play/pause & dot sekarang ditangani sepenuhnya oleh event 'scroll' di bawah
+                });
+            });
+
+            // Deteksi scroll manual/otomatis untuk memperbarui indikator titik
+            videoSlider.addEventListener('scroll', () => {
+                let index = Math.round(videoSlider.scrollLeft / videoSlider.clientWidth);
+                
+                // HANYA jalankan play/pause JIKA index slide benar-benar berubah
+                if (index !== currentVidIndex && dots[index]) {
+                    currentVidIndex = index;
+                    
+                    dots.forEach(dot => dot.classList.replace('opacity-100', 'opacity-30'));
+                    dots[index].classList.replace('opacity-30', 'opacity-100');
+                    
+                    // Putar video yang ada di layar, pause yang lain
+                    showcaseVideos.forEach((vid, i) => {
+                        if (i === index) {
+                            // Tangani Promise play() agar tidak ada error Abort di console
+                            const playPromise = vid.play();
+                            if (playPromise !== undefined) {
+                                playPromise.catch(error => { 
+                                    // Abaikan error jika auto-play diblokir oleh browser
+                                });
+                            }
+                        } else {
+                            vid.pause();
+                            vid.currentTime = 0; // Reset video yang disembunyikan
+                        }
+                    });
+                }
+            });
+        }
+
+    </script>
+</body>
+</html>
