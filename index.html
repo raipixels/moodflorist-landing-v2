@@ -298,11 +298,12 @@
            <!-- Kontainer Geser Horizontal (Satu Layar Penuh) -->
             <div id="video-slider" class="flex overflow-x-auto snap-x snap-mandatory hide-scroll rounded-[40px] shadow-2xl relative bg-black">
                 
-                <!-- Slide 1: Video -->
-                <div class="snap-center shrink-0 w-full aspect-[16/9] relative">
-                    <video class="showcase-video w-full h-full object-cover" autoplay muted playsinline>
-                        <source src="videos/video-estetik.mp4" type="video/mp4">
-                    </video>
+                <div class="gallery-slide snap-center shrink-0 w-full aspect-[16/9] relative" data-duration="198000">
+                    <iframe class="w-full h-full object-cover pointer-events-none" 
+                        src="https://www.youtube.com/embed/m3Bt8yizS8s?autoplay=1&mute=1&controls=0&loop=1&playlist=m3Bt8yizS8s" 
+                        frameborder="0" 
+                        allow="autoplay; fullscreen">
+                    </iframe>
                 </div>
 
                 <!-- Slide 2: Image -->
@@ -795,7 +796,7 @@
             
             const grandTotal = (currentPrice * currentQuantity) + totalAddonPrice;
 
-            const waNumber = '6285940781720';
+            const waNumber = '628123456789';
             const script = `Halo Mood Florist! 🌸 Saya ingin memesan produk berikut:
 
 *Produk Utama:* ${currentProduct}
