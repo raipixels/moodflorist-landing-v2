@@ -895,83 +895,74 @@ Mohon informasi ketersediaan. Terima kasih!`;
         });
 
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Ambil elemen yang TEPAT berdasarkan HTML terbaru Anda
+    
+    // ==========================================
+    // 1. KODE SLIDER YOUTUBE
+    // ==========================================
     const videoSlider = document.getElementById('video-slider');
-    const slides = document.querySelectorAll('.vid-slide'); // Mengamati kotak pembungkusnya
-    const dots = document.querySelectorAll('.vid-dot');     // Mengamati titiknya
+    const slides = document.querySelectorAll('.vid-slide'); 
+    const dots = document.querySelectorAll('.vid-dot');     
 
-    // Pastikan semua elemen ketemu
-    if (!videoSlider || slides.length === 0 || dots.length === 0) {
-        console.error("Gagal: Pastikan ID video-slider, class vid-slide, dan class vid-dot sudah benar di HTML.");
-        return;
+    if (videoSlider && slides.length > 0 && dots.length > 0) {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const activeIndex = Array.from(slides).indexOf(entry.target);
+                    dots.forEach(dot => {
+                        dot.classList.remove('opacity-100');
+                        dot.classList.add('opacity-30');
+                    });
+                    if (dots[activeIndex]) {
+                        dots[activeIndex].classList.remove('opacity-30');
+                        dots[activeIndex].classList.add('opacity-100');
+                    }
+                }
+            });
+        }, { root: videoSlider, threshold: 0.5 });
+
+        slides.forEach(slide => observer.observe(slide));
+
+        dots.forEach((dot, index) => {
+            dot.addEventListener('click', () => {
+                if (slides[index]) {
+                    videoSlider.scrollTo({ left: slides[index].offsetLeft, behavior: 'smooth' });
+                }
+            });
+        });
     }
 
-    // 2. Buat sensor "CCTV" untuk melihat kotak mana yang sedang di tengah layar
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            // Jika kotak (vid-slide) sudah masuk minimal 50% ke layar
-            if (entry.isIntersecting) {
-                // Cari tahu ini kotak urutan ke berapa
-                const activeIndex = Array.from(slides).indexOf(entry.target);
-                
-                // Matikan (redupkan) semua titik terlebih dahulu
-                dots.forEach(dot => {
-                    dot.classList.remove('opacity-100');
-                    dot.classList.add('opacity-30');
-                });
-                
-                // Nyalakan titik yang urutannya sama dengan kotak yang tampil
-                if (dots[activeIndex]) {
-                    dots[activeIndex].classList.remove('opacity-30');
-                    dots[activeIndex].classList.add('opacity-100');
-                }
-            }
-        });
-    }, {
-        root: videoSlider, // Area pemantauannya adalah dalam slider
-        threshold: 0.5     // Sensor aktif saat 50% bagian kotak terlihat
-    });
-
-    // 3. Pasang sensornya ke setiap kotak vid-slide
-    slides.forEach(slide => {
-        observer.observe(slide);
-    });
-
-    // 4. (Bonus) Fitur agar titiknya bisa diklik untuk menggeser slide
-    dots.forEach((dot, index) => {
-        dot.addEventListener('click', () => {
-            if (slides[index]) {
-                videoSlider.scrollTo({
-                    left: slides[index].offsetLeft,
-                    behavior: 'smooth'
-                });
-            }
-        });
-    });
-});
-document.addEventListener('DOMContentLoaded', () => {
+    // ==========================================
+    // 2. KODE TOMBOL MUSIK
+    // ==========================================
     const bgMusic = document.getElementById('bgMusic');
+    const musicToggle = document.getElementById('musicToggle');
+    const musicIcon = document.getElementById('musicIcon');
     let isPlaying = false;
 
-    function playMusicAutomatically() {
-        if (!isPlaying) {
-            bgMusic.play().then(() => {
-                isPlaying = true; 
-            }).catch(error => {});
-        }
-        document.removeEventListener('click', playMusicAutomatically);
-        document.removeEventListener('touchstart', playMusicAutomatically);
-        document.removeEventListener('scroll', playMusicAutomatically);
+    if (musicToggle && bgMusic) {
+        musicToggle.addEventListener('click', (e) => {
+            e.stopPropagation(); 
+            if (isPlaying) {
+                bgMusic.pause();
+                musicIcon.textContent = "🔇"; 
+            } else {
+                bgMusic.play().then(() => {
+                    musicIcon.textContent = "🎵"; 
+                }).catch(error => console.error("Gagal:", error));
+            }
+            isPlaying = !isPlaying; 
+        });
     }
-
-    document.addEventListener('click', playMusicAutomatically);
-    document.addEventListener('touchstart', playMusicAutomatically);
-    document.addEventListener('scroll', playMusicAutomatically);
 });
-    </script>
-    <audio id="bgMusic" loop>
-        <source src="images/lagusantai-website.mp3" type="audio/mpeg">
-    </audio>
+</script>
+
+<button id="musicToggle" class="fixed bottom-6 right-6 bg-[#01260E] text-white p-3 rounded-full shadow-lg z-50 transition-transform hover:scale-110 flex items-center justify-center w-12 h-12">
+    <span id="musicIcon" class="text-xl">🔇</span> 
+</button>
+
+<audio id="bgMusic" loop preload="auto">
+    <source src="images/lagu-santai.mp3" type="audio/mpeg">
+</audio>
 
 </body>
 </html>
