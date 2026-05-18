@@ -286,19 +286,18 @@
         </div>
     </section>
     <!-- SECTION BARU: Cinematic Video Gallery (Single View Auto-Slide) -->
-    <section id="showcase" class="py-24 bg-[#FFFFFF] overflow-hidden">
+   <section id="showcase" class="py-24 bg-[#FFFFFF] overflow-hidden">
         <style>
-            /* Menyembunyikan scrollbar asli tapi tetap bisa digeser (Clean Apple Style) */
+            /* Menyembunyikan scrollbar asli tapi tetap bisa digeser */
             .hide-scroll::-webkit-scrollbar { display: none; }
             .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
         </style>
         
         <div class="max-w-[1200px] mx-auto apple-reveal px-6">
             
-           <!-- Kontainer Geser Horizontal (Satu Layar Penuh) -->
             <div id="video-slider" class="flex overflow-x-auto snap-x snap-mandatory hide-scroll rounded-[40px] shadow-2xl relative bg-black">
                 
-              <div class="gallery-slide snap-center shrink-0 w-full aspect-[16/9] relative" data-duration="198000">
+                <div class="vid-slide snap-center shrink-0 w-full aspect-[16/9] relative" data-duration="198000">
                     <iframe class="w-full h-full object-cover pointer-events-none" 
                         src="https://www.youtube.com/embed/m3Bt8yizS8s?autoplay=1&mute=1&playsinline=1&controls=0&loop=1&playlist=m3Bt8yizS8s&modestbranding=1&rel=0" 
                         frameborder="0" 
@@ -306,25 +305,20 @@
                     </iframe>
                 </div>
 
-                <!-- Slide 2: Image -->
-                <div class="snap-center shrink-0 w-full aspect-[16/9] relative">
-                    <!-- Gunakan tag img untuk gambar -->
+                <div class="vid-slide snap-center shrink-0 w-full aspect-[16/9] relative">
                     <img src="images/gambar 1 Large.jpeg" class="w-full h-full object-cover" alt="Galeri 1">
                 </div>
 
-                <!-- Slide 3: Image -->
-                <div class="snap-center shrink-0 w-full aspect-[16/9] relative">
+                <div class="vid-slide snap-center shrink-0 w-full aspect-[16/9] relative">
                     <img src="images/gambar 2 Large.jpeg" class="w-full h-full object-cover" alt="Galeri 2">
                 </div>
 
-                <!-- Slide 4: Image -->
-                <div class="snap-center shrink-0 w-full aspect-[16/9] relative">
+                <div class="vid-slide snap-center shrink-0 w-full aspect-[16/9] relative">
                     <img src="images/gambar 3Large .jpeg" class="w-full h-full object-cover" alt="Galeri 3">
                 </div>
 
             </div>
 
-            <!-- Indikator Posisi (Dots) - Ditambah 1 agar sesuai 4 slide -->
             <div class="flex justify-center gap-3 mt-8">
                 <div class="vid-dot w-2.5 h-2.5 rounded-full bg-[#01260E] opacity-100 transition-opacity duration-300"></div>
                 <div class="vid-dot w-2.5 h-2.5 rounded-full bg-[#01260E] opacity-30 transition-opacity duration-300"></div>
@@ -702,6 +696,55 @@
             updateTotalPrice();
         }
 
+function orderProduct(name, price, imgSrc) {
+    // ==========================================
+    // 1. TAMBAHKAN PENGECEKAN JEDA DI SINI
+    // ==========================================
+    const waktuTerakhir = localStorage.getItem('waktuPesanan');
+    const sekarang = Date.now();
+    const jeda = 5 * 60 * 1000; // 5 menit dalam milidetik
+
+    if (waktuTerakhir && (sekarang - waktuTerakhir < jeda)) {
+        const sisaMenit = Math.ceil((jeda - (sekarang - waktuTerakhir)) / 60000);
+        alert(`Pesanan sebelumnya sedang kami proses. Mohon tunggu ${sisaMenit} menit lagi untuk memesan kembali.`);
+        return; // Hentikan fungsi di sini, Pop-up/Modal tidak akan terbuka
+    }
+    // ==========================================
+
+    // --- KODE ASLI ANDA DI BAWAH SINI ---
+    currentProduct = name;
+    currentPrice = price;
+    currentQuantity = 1; // Reset quantity ke 1
+    document.getElementById('qtyDisplay').innerText = currentQuantity;
+    
+    // Reset Addons saat buka produk baru
+    selectedAddons = {};
+    document.querySelectorAll('.addon-card').forEach(card => {
+        card.classList.remove('selected');
+        
+        // Logika: Sembunyikan addon jika namanya sama dengan produk utama
+        if (card.dataset.name === name) {
+            card.style.display = 'none';
+        } else {
+            card.style.display = 'block';
+        }
+    });
+    updateTotalPrice();
+    
+    document.getElementById('modalTitle').innerText = name;
+    document.getElementById('modalPreviewImg').src = imgSrc;
+    document.getElementById('errorName').classList.add('hidden');
+    
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    
+    setTimeout(() => {
+        modalContent.classList.remove('scale-95', 'opacity-0');
+        modalContent.classList.add('scale-100', 'opacity-100');
+    }, 10);
+    
+    document.body.style.overflow = 'hidden';
+}
         function orderProduct(name, price, imgSrc) {
             currentProduct = name;
             currentPrice = price;
@@ -796,7 +839,7 @@
             
             const grandTotal = (currentPrice * currentQuantity) + totalAddonPrice;
 
-            const waNumber = '628123456789';
+            const waNumber = '6285940781720';
             const script = `Halo Mood Florist! 🌸 Saya ingin memesan produk berikut:
 
 *Produk Utama:* ${currentProduct}
@@ -811,7 +854,10 @@ Mohon informasi ketersediaan. Terima kasih!`;
 
             window.open(`https://wa.me/${waNumber}?text=${encodeURIComponent(script)}`, '_blank');
             closeModal();
+            // Mulai menghitung jeda 5 menit sejak chat WA terbuka
+            localStorage.setItem('waktuPesanan', Date.now().toString());
         }
+       
 
         // Generator Kelopak Bunga (Petals Spawner)
         function spawnPetals(containerId, count) {
