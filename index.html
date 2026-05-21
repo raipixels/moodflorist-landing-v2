@@ -250,6 +250,13 @@
             object-fit: cover;
         }
         .full-viewport { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; }
+
+        /* Sold-out overlay — badge di bawah gambar */
+        .soldout-badge {
+            background: linear-gradient(135deg, rgba(0,0,0,0.85) 0%, rgba(20,10,10,0.9) 100%);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
     </style>
 </head>
 <body class="antialiased selection:bg-[#F2A0B6] selection:text-[#01260E]">
@@ -361,6 +368,24 @@
                         <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition duration-500 flex items-center justify-center backdrop-blur-sm">
                             <span class="text-[#F2A0B6] font-semibold tracking-[0.2em] uppercase border border-[#F2A0B6] px-8 py-3 rounded-full text-sm">Lihat Detail</span>
                         </div>
+
+                        <!-- Badge Sisa Stock — Selalu tampil -->
+                        <div class="absolute top-5 left-5 z-10">
+                            <span class="flex items-center gap-2 bg-[#F2A0B6]/20 border border-[#F2A0B6]/60 backdrop-blur-sm text-[#F2A0B6] font-bold tracking-widest uppercase text-xs px-4 py-2 rounded-full shadow-lg">
+                                <span class="w-2 h-2 rounded-full bg-[#F2A0B6] animate-pulse inline-block"></span>
+                                Sisa Stock 2 pcs
+                            </span>
+                        </div>
+
+                        <!-- =====================================================
+                             CADANGAN — AKTIFKAN KETIKA STOCK HABIS:
+                             Hapus  style="display:none"  pada div di bawah ini
+                             ===================================================== -->
+                        <div class="absolute inset-0 flex items-end justify-center pb-8 z-20" style="display:none" id="soldout-mini-bloom">
+                            <div class="bg-black/80 backdrop-blur-md px-8 py-4 rounded-2xl text-center border border-[#F2A0B6]/40 shadow-xl">
+                                <span class="text-white font-bold tracking-[0.2em] uppercase text-sm block">Sudah Tidak Terjual Lagi</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -369,6 +394,14 @@
                     <h3 class="headline-large font-raleway interactive-title gradient-pink mb-1">Mini Bloom</h3>
                     <div class="mb-1">
                         <span class="text-5xl md:text-7xl font-bold tracking-tighter text-[#F2A0B6] interactive-price glow-pink">Rp 15.000</span>
+                    </div>
+
+                    <!-- Info Sisa Stock -->
+                    <div class="flex items-center gap-3 mt-2 mb-1">
+                        <span class="flex items-center gap-2 bg-[#F2A0B6]/10 border border-[#F2A0B6]/40 text-[#F2A0B6] font-semibold tracking-widest uppercase text-xs px-4 py-2 rounded-full">
+                            <span class="w-2 h-2 rounded-full bg-[#F2A0B6] animate-pulse inline-block"></span>
+                            Sisa Stock 2 pcs
+                        </span>
                     </div>
 
                     <div id="desc-1" class="side-desc">
@@ -390,6 +423,10 @@
     </ul>
 </div>
 
+                    <!-- =====================================================
+                         CADANGAN — NONAKTIFKAN TOMBOL INI KETIKA STOCK HABIS:
+                         Tambahkan  style="display:none"  atau hapus baris ini
+                         ===================================================== -->
                     <button onclick="orderProduct('Mini Bloom', 15000, 'images/mini bloom Large.jpeg')" class="btn-outline btn-outline-pink mt-4 w-fit">Pesan Sekarang</button>
                 </div>
 
@@ -425,7 +462,7 @@
     </ul>
 </div>
 
-                    <button onclick="orderProduct('Mood Bag', 35000, 'images/bag mood Large.jpeg')" class="btn-outline btn-outline-pink mt-4 w-fit">Pesan Sekarang</button>
+                    <button onclick="orderProduct('Mood Bag', 35000, 'images/bag mood Large.jpeg')" class="btn-outline btn-outline-pink mt-4 w-fit" style="display:none">Pesan Sekarang</button>
                 </div>
 
                 <!-- Kanan: Gambar Interaktif -->
@@ -435,6 +472,13 @@
                         
                         <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition duration-500 flex items-center justify-center backdrop-blur-sm">
                             <span class="text-[#F2A0B6] font-semibold tracking-[0.2em] uppercase border border-[#F2A0B6] px-8 py-3 rounded-full text-sm">Lihat Detail</span>
+                        </div>
+
+                        <!-- Overlay "Sudah Tidak Terjual Lagi" — Permanen -->
+                        <div class="absolute inset-0 flex items-end justify-center pb-8 z-10 pointer-events-none">
+                            <div class="bg-black/80 backdrop-blur-md px-8 py-4 rounded-2xl text-center border border-[#F2A0B6]/40 shadow-xl">
+                                <span class="text-white font-bold tracking-[0.2em] uppercase text-sm block">Sudah Tidak Terjual Lagi</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -453,6 +497,13 @@
                         
                         <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition duration-500 flex items-center justify-center backdrop-blur-sm">
                             <span class="text-[#F2A0B6] font-semibold tracking-[0.2em] uppercase border border-[#F2A0B6] px-8 py-3 rounded-full text-sm">Lihat Detail</span>
+                        </div>
+
+                        <!-- Overlay "Sudah Tidak Terjual Lagi" — Permanen -->
+                        <div class="absolute inset-0 flex items-end justify-center pb-8 z-10 pointer-events-none">
+                            <div class="bg-black/80 backdrop-blur-md px-8 py-4 rounded-2xl text-center border border-[#B76E79]/40 shadow-xl">
+                                <span class="text-white font-bold tracking-[0.2em] uppercase text-sm block">Sudah Tidak Terjual Lagi</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -485,7 +536,7 @@
     </ul>
 </div>
 
-                    <button onclick="orderProduct('Secret Box', 20000, 'images/scret box Large.jpeg')" class="btn-outline btn-outline-pink mt-4 w-fit">Pesan Sekarang</button>
+                    <button onclick="orderProduct('Secret Box', 20000, 'images/scret box Large.jpeg')" class="btn-outline btn-outline-pink mt-4 w-fit" style="display:none">Pesan Sekarang</button>
                 </div>
 
             </div>
